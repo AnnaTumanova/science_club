@@ -7,9 +7,20 @@ DEBUG = True
 SECRET_KEY = 'q%@4+a_(vdw^ap_c*sbnu76aydeutxf%l7rm!nydo4@7-8*75s'
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS = ['*']
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOCAL_ENV = None
+
+if 'EMAIL_BACKEND' in os.environ:
+    EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
+    EMAIL_HOST = os.environ['EMAIL_HOST']
+    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
+    DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']
+    SERVER_EMAIL = os.environ['EMAIL_HOST_USER']
 
 try:
     from .local import *

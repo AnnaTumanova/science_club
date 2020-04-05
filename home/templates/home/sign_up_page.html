@@ -31,11 +31,13 @@
         </div>
     </nav>
 
-    <!-- Contact Section-->
-    <section class="page-section" id="contact">
+    <section class="page-section" id="signup">
         <div class="container">
-            <!-- Contact Section Heading-->
-            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Sign up</h2>
+            {% if not page.is_account_created %}
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Sign up</h2>
+            {% else %}
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">You're almost there</h2>
+            {% endif %}
             <!-- Icon Divider-->
             <div class="divider-custom">
                 <div class="divider-custom-line"></div>
@@ -45,20 +47,27 @@
             <!-- Contact Section Form-->
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <form action="{% pageurl page %}" method="POST">
-                        {% csrf_token %}
 
-                        {{ page.form.non_field_errors }}
+                    {% if not page.is_account_created %}
+                        <form action="{% pageurl page %}" method="POST">
+                            {% csrf_token %}
 
-                        {% for field in page.form %}
-                            <div class="form-group">
-                                {{ field.label_tag }} {{ field }}
-                                {{ field.errors }}
-                            </div>
-                        {% endfor %}
+                            {{ page.form.non_field_errors }}
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                            {% for field in page.form %}
+                                {% if field.name != 'is_active' %}
+                                    <div class="form-group">
+                                        {{ field.label_tag }} {{ field }}
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    {% else %}
+                        <div class="text-center">Check your email for confirmation link before you can login!</div>
+                    {% endif %}
                 </div>
             </div>
         </div>

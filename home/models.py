@@ -1,9 +1,17 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
 from wagtail.core.models import Page, PAGE_TEMPLATE_VAR
+
+from .tokens import account_activation_token
 
 
 class HomePage(Page):
@@ -37,7 +45,7 @@ class SignUpForm(forms.ModelForm):
 
         if cleaned_data["password1"] != cleaned_data["password2"]:
             self.add_error("password1", ValidationError("Passwords did not match"))
-        elif len(cleaned_data["password1"]):
+        elif len(cleaned_data["password1"]) < 8:
             self.add_error("password1", ValidationError("Password must be at least 8 characters long"))
         if User.objects.filter(username=cleaned_data["username"]).exists():
             self.add_error("username", ValidationError("Chosen username already exists"))
@@ -55,13 +63,36 @@ class SignUpForm(forms.ModelForm):
 class SignUpPage(Page):
     form = SignUpForm()
     is_account_created = False
+    confirmation_link = None
 
     def get_context(self, request, *args, **kwargs):
         self.form = SignUpForm(request.POST or None)
 
         if request.method == 'POST' and self.form.is_valid():
-            self.form.save()
-            self.is_account_created = True
+            try:
+                user = self.form.save()
+
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your blog account.'
+
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = account_activation_token.make_token(user)
+
+                message = render_to_string('account_confirmation_mail.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': uid,
+                    'token': token
+                })
+                to_email = self.form.cleaned_data.get('email')
+                email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+                )
+                email.send()
+
+                self.is_account_created = True
+            except:
+                self.form.add_error(None, "Error occurred during user registration")
 
         return {
             PAGE_TEMPLATE_VAR: self,

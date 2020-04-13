@@ -1,9 +1,5 @@
-from django import forms
-from django.contrib.auth import password_validation
-from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -11,53 +7,38 @@ from django.utils.http import urlsafe_base64_encode
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
 from wagtail.core.models import Page, PAGE_TEMPLATE_VAR
 
+from django.conf import settings
+from .forms import ContactForm, SignUpForm
 from .tokens import account_activation_token
 
 
 class HomePage(Page):
-    pass
+    form = ContactForm()
 
+    def get_context(self, request, *args, **kwargs):
+        self.form = ContactForm(request.POST or None)
 
-class SignUpForm(forms.ModelForm):
-    username = forms.CharField(
-        label="Username",
-        strip=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    password1 = forms.CharField(
-        label="Password",
-        strip=False,
-        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    password2 = forms.CharField(
-        label="Password confirmation",
-        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
-        strip=False,
-        help_text="Enter the same password as before, for verification.",
-    )
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    is_active = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput())
+        if request.method == 'POST' and self.form.is_valid():
+            try:
+                data = self.form.cleaned_data
+                mail_subject = "Message from: " + data.get('name')
+                message = render_to_string('mail/contact_message_mail.html', {
+                    'name': data.get('name'),
+                    'email': data.get('email'),
+                    'message': data.get('message')
+                })
+                email = EmailMessage(
+                    mail_subject, message, to=[settings.DEFAULT_CONTACT_US_EMAIL]
+                )
+                email.send()
+            except:
+                self.form.add_error(None, "Error occurred during message sending")
 
-    def clean(self):
-        cleaned_data = self.cleaned_data
-
-        if cleaned_data["password1"] != cleaned_data["password2"]:
-            self.add_error("password1", ValidationError("Passwords did not match"))
-        elif len(cleaned_data["password1"]) < 8:
-            self.add_error("password1", ValidationError("Password must be at least 8 characters long"))
-        if User.objects.filter(username=cleaned_data["username"]).exists():
-            self.add_error("username", ValidationError("Chosen username already exists"))
-        if User.objects.filter(email=cleaned_data["email"]).exists():
-            self.add_error("email", ValidationError("Chosen email already exists"))
-
-        cleaned_data['is_active'] = False
-        return cleaned_data
-
-    class Meta:
-        model = User
-        fields = ('username', 'password1', 'password2', 'email', 'is_active')
+        return {
+            PAGE_TEMPLATE_VAR: self,
+            'self': self,
+            'request': request
+        }
 
 
 class SignUpPage(Page):
@@ -78,7 +59,7 @@ class SignUpPage(Page):
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = account_activation_token.make_token(user)
 
-                message = render_to_string('account_confirmation_mail.html', {
+                message = render_to_string('mail/account_confirmation_mail.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': uid,

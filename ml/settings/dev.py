@@ -19,8 +19,9 @@ if 'EMAIL_BACKEND' in os.environ:
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 
-    DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']
-    SERVER_EMAIL = os.environ['EMAIL_HOST_USER']
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+    SERVER_EMAIL = EMAIL_HOST_USER
+    DEFAULT_CONTACT_US_EMAIL = EMAIL_HOST_USER
 
 try:
     from .local import *

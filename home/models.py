@@ -14,9 +14,11 @@ from .tokens import account_activation_token
 
 class HomePage(Page):
     form = ContactForm()
+    alerts = []
 
     def get_context(self, request, *args, **kwargs):
         self.form = ContactForm(request.POST or None)
+        self.alerts = []
 
         if request.method == 'POST' and self.form.is_valid():
             try:
@@ -31,8 +33,17 @@ class HomePage(Page):
                     mail_subject, message, to=[settings.DEFAULT_CONTACT_US_EMAIL]
                 )
                 email.send()
+                self.alerts.append({
+                    'type': 'success',
+                    'message': 'Your message has been sent! :)'
+                })
+                self.form = ContactForm()
             except:
                 self.form.add_error(None, "Error occurred during message sending")
+                self.alerts.append({
+                    'type': 'danger',
+                    'message': 'An error occurred. Message has not been sent :('
+                })
 
         return {
             PAGE_TEMPLATE_VAR: self,

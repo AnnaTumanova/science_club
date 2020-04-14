@@ -2,55 +2,72 @@
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-                {% with self.get_site.site_name as site_name %}
-                    {% if site_name %}- {{ site_name }}{% endif %}
-                {% endwith %}
-            {% endblock %}
-        </title>
-
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/ml.css' %}">
-        <link href="../static/css/styles.css" rel="stylesheet" />
-
-        {# Google fonts #}
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-
-        {# Font Awesome icons (free version) #}
-        <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" crossorigin="anonymous"></script>
-
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        {% block title %}
+            {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
         {% endblock %}
-    </head>
-
-    <body class="{% block body_class %}{% endblock %}" id="page-top">
-        {% wagtailuserbar %}
-
-        {% block content %}{% endblock %}
-
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/ml.js' %}"></script>
-        {# Bootstrap core JS #}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        {# Third party plugin JS #}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-        {# Core theme JS #}
-        <script src="../static/js/scripts.js"></script>
-
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
+        {% block title_suffix %}
+            {% with self.get_site.site_name as site_name %}
+                {% if site_name %}- {{ site_name }}{% endif %}
+            {% endwith %}
         {% endblock %}
-    </body>
+    </title>
+
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    {# Global stylesheets #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ml.css' %}">
+    <link href="../static/css/styles.css" rel="stylesheet"/>
+
+    {# Google fonts #}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+
+    {# Font Awesome icons (free version) #}
+    <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" crossorigin="anonymous"></script>
+
+    {% block extra_css %}
+        {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}" id="page-top">
+{% wagtailuserbar %}
+
+{# Navigation #}
+<div class="fixed-top">
+    {% block navbar %}{% endblock %}
+
+    {% if messages %}
+        <div id="alerts">
+            {% for message in messages %}
+                <div class="m-0 alert alert-dismissible {{ message.tags }} rounded-0">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% block content %}{% endblock %}
+
+{# Global javascript #}
+<script type="text/javascript" src="{% static 'js/ml.js' %}"></script>
+{# Bootstrap core JS #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+{# Third party plugin JS #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+{# Core theme JS #}
+<script src="../static/js/scripts.js"></script>
+
+{% block extra_js %}
+    {# Override this in templates to add extra javascript #}
+{% endblock %}
+</body>
 </html>

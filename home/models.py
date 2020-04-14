@@ -1,24 +1,24 @@
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
-from wagtail.core.models import Page, PAGE_TEMPLATE_VAR
+from wagtail.core.models import Page
 
-from django.conf import settings
 from .forms import ContactForm, SignUpForm
 from .tokens import account_activation_token
 
 
 class HomePage(Page):
     form = ContactForm()
-    alerts = []
 
-    def get_context(self, request, *args, **kwargs):
+    def serve(self, request, *args, **kwargs):
         self.form = ContactForm(request.POST or None)
-        self.alerts = []
 
         if request.method == 'POST' and self.form.is_valid():
             try:
@@ -29,35 +29,21 @@ class HomePage(Page):
                     'email': data.get('email'),
                     'message': data.get('message')
                 })
-                email = EmailMessage(
-                    mail_subject, message, to=[settings.DEFAULT_CONTACT_US_EMAIL]
-                )
+                email = EmailMessage(mail_subject, message, to=[settings.DEFAULT_CONTACT_US_EMAIL])
                 email.send()
-                self.alerts.append({
-                    'type': 'success',
-                    'message': 'Your message has been sent! :)'
-                })
                 self.form = ContactForm()
-            except:
-                self.form.add_error(None, "Error occurred during message sending")
-                self.alerts.append({
-                    'type': 'danger',
-                    'message': 'An error occurred. Message has not been sent :('
-                })
 
-        return {
-            PAGE_TEMPLATE_VAR: self,
-            'self': self,
-            'request': request
-        }
+                messages.success(request, 'Your message has been sent! :)')
+            except:
+                messages.error(request, 'An error occurred. Message has not been sent :(')
+
+        return super().serve(request, *args, **kwargs)
 
 
 class SignUpPage(Page):
     form = SignUpForm()
-    is_account_created = False
-    confirmation_link = None
 
-    def get_context(self, request, *args, **kwargs):
+    def serve(self, request, *args, **kwargs):
         self.form = SignUpForm(request.POST or None)
 
         if request.method == 'POST' and self.form.is_valid():
@@ -66,7 +52,6 @@ class SignUpPage(Page):
 
                 current_site = get_current_site(request)
                 mail_subject = 'Activate your blog account.'
-
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = account_activation_token.make_token(user)
 
@@ -77,17 +62,13 @@ class SignUpPage(Page):
                     'token': token
                 })
                 to_email = self.form.cleaned_data.get('email')
-                email = EmailMessage(
-                    mail_subject, message, to=[to_email]
-                )
+                email = EmailMessage(mail_subject, message, to=[to_email])
                 email.send()
 
-                self.is_account_created = True
+                messages.success(request, "You're almost there! "
+                                          "Check your email for confirmation link before you can login")
+                return HttpResponseRedirect('/')
             except:
-                self.form.add_error(None, "Error occurred during user registration")
+                messages.error(request, 'Error occurred during user registration')
 
-        return {
-            PAGE_TEMPLATE_VAR: self,
-            'self': self,
-            'request': request
-        }
+        return super().serve(request, *args, **kwargs)

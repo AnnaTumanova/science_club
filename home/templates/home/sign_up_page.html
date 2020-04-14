@@ -7,8 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/sign_up_page.css' %}">
 {% endblock %}
 
-{% block content %}
-    <!-- Navigation-->
+{% block navbar %}
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
         <div class="container">
             <a class="navbar-brand" href="/">Machine Learning Club</a>
@@ -30,14 +29,12 @@
             </div>
         </div>
     </nav>
+{% endblock %}
 
-    <section class="page-section" id="signup">
+{% block content %}
+    <header class="masthead">
         <div class="container">
-            {% if not page.is_account_created %}
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Sign up</h2>
-            {% else %}
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">You're almost there</h2>
-            {% endif %}
+            <h1 class="masthead-heading text-center text-uppercase text-secondary mb-0">Sign up</h1>
             <!-- Icon Divider-->
             <div class="divider-custom">
                 <div class="divider-custom-line"></div>
@@ -47,30 +44,25 @@
             <!-- Contact Section Form-->
             <div class="row">
                 <div class="col-lg-8 mx-auto">
+                    <form action="{% pageurl page %}" method="POST">
+                        {% csrf_token %}
 
-                    {% if not page.is_account_created %}
-                        <form action="{% pageurl page %}" method="POST">
-                            {% csrf_token %}
+                        {{ page.form.non_field_errors }}
 
-                            {{ page.form.non_field_errors }}
+                        {% for field in page.form %}
+                            {% if field.name != 'is_active' %}
+                                <div class="form-group">
+                                    {{ field.label_tag }} {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
 
-                            {% for field in page.form %}
-                                {% if field.name != 'is_active' %}
-                                    <div class="form-group">
-                                        {{ field.label_tag }} {{ field }}
-                                        {{ field.errors }}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    {% else %}
-                        <div class="text-center">Check your email for confirmation link before you can login!</div>
-                    {% endif %}
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
 {% endblock content %}

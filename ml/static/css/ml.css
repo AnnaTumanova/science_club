@@ -1,3 +1,15 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 ul.errorlist {
     color: red;
+}
+
+header.masthead--background {
+    background: no-repeat scroll center center;
+    background-size: cover;
 }

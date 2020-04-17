@@ -31,18 +31,33 @@ class ContactForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     username = forms.CharField(
         label="Username",
-        strip=False,
+        strip=True,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    first_name = forms.CharField(
+        label="First name",
+        strip=True,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    last_name = forms.CharField(
+        label="Last name",
+        strip=True,
+        required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     password1 = forms.CharField(
         label="Password",
         strip=False,
+        required=True,
         widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
     )
     password2 = forms.CharField(
         label="Password confirmation",
-        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
         strip=False,
+        required=True,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
     )
     email = forms.EmailField(
         required=True,
@@ -69,4 +84,4 @@ class SignUpForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'email', 'is_active')
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2', 'email', 'is_active')

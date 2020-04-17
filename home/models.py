@@ -12,9 +12,17 @@ from wagtail.core.models import Page
 
 from .forms import ContactForm, SignUpForm
 from .tokens import account_activation_token
+from blog.models import BlogPage
 
 
 class HomePage(Page):
+    parent_page_types = ['wagtailcore.Page']
+    subpage_types = ['SignUpPage', 'ContactPage', 'blog.BlogPage']
+
+
+class ContactPage(Page):
+    parent_page_types = ['HomePage']
+    subpage_types = []
     form = ContactForm()
 
     def serve(self, request, *args, **kwargs):
@@ -34,13 +42,16 @@ class HomePage(Page):
                 self.form = ContactForm()
 
                 messages.success(request, 'Your message has been sent! :)')
+                return HttpResponseRedirect('/')
             except:
-                messages.error(request, 'An error occurred. Message has not been sent :(')
+                messages.error(request, 'An error occurred and your message has not been sent. Please try again')
 
         return super().serve(request, *args, **kwargs)
 
 
 class SignUpPage(Page):
+    parent_page_types = ['HomePage']
+    subpage_types = []
     form = SignUpForm()
 
     def serve(self, request, *args, **kwargs):

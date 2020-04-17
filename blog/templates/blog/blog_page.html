@@ -7,30 +7,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/blog_page.css' %}">
 {% endblock %}
 
-{% block navbar %}
-    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand" href="/">Machine Learning Club</a>
-            <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
-                    type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu <i
-                    class="fas fa-bars"></i></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="/#contact">Contact</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded blog-page-link"
-                                                         href="/blog">Blog</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="/signup">Sign up</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="">Log in</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-{% endblock %}
-
 {% block content %}
     <header class="masthead masthead--background" style="background-image: url({% static 'assets/img/blog-bg.jpg' %})">
         <div class="overlay"></div>
@@ -38,11 +14,6 @@
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <h1 class="masthead-heading text-center text-uppercase text-white mb-0">{{ page.title }}</h1>
-                    <div class="divider-custom divider-light">
-                        <div class="divider-custom-line"></div>
-                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                        <div class="divider-custom-line"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +33,7 @@
                             </h3>
                         </a>
                         <p class="post-meta">Posted by
-                            <a href="#">Start Bootstrap</a>
+                            <a href="#">{{ post.owner.first_name }} {{ post.owner.last_name }}</a>
                             on August 24, 2019</p>
                     </div>
                     <hr/>
@@ -70,10 +41,9 @@
 
                 <!-- Pager -->
                 <div class="text-center mt-5 mb-5 lead font-weight-bold">
-                    <p><a href="{{ page.get_parent.url }}">Older Posts &rarr;</a></p>
+                    <p><a href="{{ page.url }}">Older Posts &rarr;</a></p>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}

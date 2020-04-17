@@ -3,13 +3,18 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 from wagtail.search import index
+from django.contrib.auth.models import User
 
 
 class BlogPage(Page):
-    pass
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['PostPage']
 
 
 class PostPage(Page):
+    parent_page_types = ['BlogPage']
+    subpage_types = []
+
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)

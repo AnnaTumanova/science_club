@@ -27,7 +27,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'home',
-    'blog',
     'search',
 
     'wagtail.contrib.forms',
@@ -156,7 +155,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'ml/static'),
-    os.path.join(BASE_DIR, 'blog/static'),
+    os.path.join(BASE_DIR, 'home/static'),
 )
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated

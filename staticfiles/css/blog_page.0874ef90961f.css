@@ -34,7 +34,6 @@
     text-decoration: underline;
     color: #0085A1;
 }
-
 @media only screen and (min-width: 768px) {
     .post-preview > a > .post-title {
         font-size: 36px;

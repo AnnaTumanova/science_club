@@ -5,10 +5,6 @@ body {
     justify-content: space-between;
 }
 
-ul.errorlist {
-    color: red;
-}
-
 #mainNav .navbar-nav li.nav-item a.nav-link.chosen-link:hover {
     color: #00d9af;
 }
@@ -169,4 +165,18 @@ header.masthead .post-heading .meta a {
 header.masthead--background {
     background: no-repeat scroll center center;
     background-size: cover;
+}
+
+.btn--lead {
+    font-size: 1.25rem;
+}
+
+ul.errorlist {
+    color: red;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.errorfield {
+    border-color: red;
 }

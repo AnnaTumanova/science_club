@@ -1,0 +1,15 @@
+{% extends "wagtailadmin/login.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block branding_login %}
+    Sign in to the Machine Learning Club
+{% endblock %}
+
+{% block submit_buttons %}
+    {{ block.super }}
+    <a type="button" class="button button-longrunning" href="{% slugurl 'home' %}">
+        <span class="icon icon-spinner"></span>
+        <em>Return home &rarr;</em>
+    </a>
+{% endblock %}

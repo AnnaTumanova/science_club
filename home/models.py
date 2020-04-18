@@ -4,28 +4,32 @@ from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.db import models
-from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 from wagtail.search import index
 
 from .forms import ContactForm, SignUpForm
-from .tokens import account_activation_token
+from .redirect import get_home_redirect_response
+from .signup import account_activation_token
 
 
 class HomePage(Page):
     parent_page_types = ['wagtailcore.Page']
     subpage_types = ['SignUpPage', 'ContactPage', 'BlogPage']
+    slug = 'home'
 
 
 class ContactPage(Page):
     parent_page_types = ['HomePage']
     subpage_types = []
+    slug = 'contact'
+
     form = ContactForm()
 
     def serve(self, request, *args, **kwargs):
@@ -45,7 +49,7 @@ class ContactPage(Page):
                 self.form = ContactForm()
 
                 messages.success(request, 'Your message has been sent! :)')
-                return HttpResponseRedirect('/')
+                return get_home_redirect_response()
             except:
                 messages.error(request, 'An error occurred and your message has not been sent. Please try again')
 
@@ -55,6 +59,7 @@ class ContactPage(Page):
 class BlogPage(Page):
     parent_page_types = ['HomePage']
     subpage_types = ['PostPage']
+    slug = 'blog'
 
 
 class PostPage(Page):
@@ -80,6 +85,8 @@ class PostPage(Page):
 class SignUpPage(Page):
     parent_page_types = ['HomePage']
     subpage_types = []
+    slug = 'signup'
+
     form = SignUpForm()
 
     def serve(self, request, *args, **kwargs):
@@ -106,8 +113,21 @@ class SignUpPage(Page):
 
                 messages.success(request, "You're almost there! "
                                           "Check your email for confirmation link before you can login")
-                return HttpResponseRedirect('/')
+                return get_home_redirect_response()
             except:
                 messages.error(request, 'Error occurred during user registration')
 
         return super().serve(request, *args, **kwargs)
+
+
+class ReturnHome(ModelAdmin):
+    model = HomePage
+    menu_label = 'Return home'
+    menu_icon = 'undo'
+    menu_order = 1
+
+    def index_view(self, request):
+        return get_home_redirect_response()
+
+
+modeladmin_register(ReturnHome)

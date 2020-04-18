@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 
 class ContactForm(forms.Form):
+    error_css_class = 'form--error'
+
     name = forms.CharField(
         label="Name",
         max_length=50,
@@ -24,11 +26,18 @@ class ContactForm(forms.Form):
         help_text=password_validation.password_validators_help_text_html(),
     )
 
+    def clean(self):
+        for field_name in self.errors:
+            self[field_name].field.widget.attrs['class'] += ' errorfield'
+        return super().clean()
+
     class Meta:
         fields = ('name', 'email', 'message')
 
 
 class SignUpForm(forms.ModelForm):
+    error_css_class = 'form--error'
+
     username = forms.CharField(
         label="Username",
         strip=True,
@@ -71,13 +80,16 @@ class SignUpForm(forms.ModelForm):
 
         if "password1" in cleaned_data and "password2" in cleaned_data:
             if cleaned_data["password1"] != cleaned_data["password2"]:
-                self.add_error("password1", ValidationError("Passwords did not match"))
+                self.add_error("password1", ValidationError("Passwords did not match."))
             elif len(cleaned_data["password1"]) < 8:
-                self.add_error("password1", ValidationError("Password must be at least 8 characters long"))
+                self.add_error("password1", ValidationError("Password must be at least 8 characters long."))
         if "username" in cleaned_data and User.objects.filter(username=cleaned_data["username"]).exists():
-            self.add_error("username", ValidationError("Chosen username already exists"))
+            self.add_error("username", ValidationError("Chosen username already exists."))
         if "email" in cleaned_data and User.objects.filter(email=cleaned_data["email"]).exists():
-            self.add_error("email", ValidationError("Chosen email already exists"))
+            self.add_error("email", ValidationError("Chosen email already exists."))
+
+        for field_name in self.errors:
+            self[field_name].field.widget.attrs['class'] += ' errorfield'
 
         cleaned_data["is_active"] = False
         return cleaned_data

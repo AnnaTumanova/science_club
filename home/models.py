@@ -3,16 +3,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
-from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
-from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
-from wagtail.search import index
 
 from .forms import ContactForm, SignUpForm
 from .redirect import get_home_redirect_response
@@ -21,7 +17,7 @@ from .signup import account_activation_token
 
 class HomePage(Page):
     parent_page_types = ['wagtailcore.Page']
-    subpage_types = ['SignUpPage', 'ContactPage', 'BlogPage']
+    subpage_types = ['SignUpPage', 'ContactPage', 'articles.ArticleIndexPage']
     slug = 'home'
 
 
@@ -54,32 +50,6 @@ class ContactPage(Page):
                 messages.error(request, 'An error occurred and your message has not been sent. Please try again')
 
         return super().serve(request, *args, **kwargs)
-
-
-class BlogPage(Page):
-    parent_page_types = ['HomePage']
-    subpage_types = ['PostPage']
-    slug = 'blog'
-
-
-class PostPage(Page):
-    parent_page_types = ['BlogPage']
-    subpage_types = []
-
-    date = models.DateField("Post date")
-    intro = models.CharField(max_length=250)
-    body = RichTextField(blank=True)
-
-    search_fields = Page.search_fields + [
-        index.SearchField('intro'),
-        index.SearchField('body'),
-    ]
-
-    content_panels = Page.content_panels + [
-        FieldPanel('date'),
-        FieldPanel('intro'),
-        FieldPanel('body', classname="full"),
-    ]
 
 
 class SignUpPage(Page):

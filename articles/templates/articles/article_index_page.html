@@ -4,11 +4,12 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/blog_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/article_index_page.css' %}">
 {% endblock %}
 
 {% block content %}
-    <header class="masthead masthead--background" style="background-image: url({% static 'assets/img/blog-bg-compressor.jpg' %})">
+    <header class="masthead masthead--background"
+            style="background-image: url({% static 'assets/img/articles-bg-compressor.jpg' %})">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -22,18 +23,18 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
-                {% for post in page.get_children %}
-                    <div class="post-preview">
+                {% for article in page.get_children %}
+                    <div class="article-preview">
                         <a href="">
-                            <h2 class="post-title">
-                                <a href="{% pageurl post %}">{{ post.title }}</a>
+                            <h2 class="article-title">
+                                <a href="{% pageurl article %}">{{ article.title }}</a>
                             </h2>
-                            <h3 class="post-subtitle">
-                                {{ post.specific.intro }}
+                            <h3 class="article-subtitle">
+                                {{ article.specific.intro }}
                             </h3>
                         </a>
-                        <p class="post-meta">Posted by
-                            <a href="#">{{ post.owner.first_name }} {{ post.owner.last_name }}</a>
+                        <p class="article-meta">Posted by
+                            <a href="#">{{ article.owner.first_name }} {{ article.owner.last_name }}</a>
                             on August 24, 2019</p>
                     </div>
                     <hr/>
@@ -41,7 +42,7 @@
 
                 <!-- Pager -->
                 <div class="text-center mt-5 mb-5 lead font-weight-bold">
-                    <p><a href="{{ page.url }}">Older Posts &rarr;</a></p>
+                    <p><a href="{{ page.url }}">Older Articles &rarr;</a></p>
                 </div>
             </div>
         </div>

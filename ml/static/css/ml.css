@@ -94,7 +94,7 @@ header.masthead .overlay {
 }
 
 header.masthead .page-heading,
-header.masthead .post-heading,
+header.masthead .article-heading,
 header.masthead .site-heading {
     color: white;
 }
@@ -126,38 +126,38 @@ header.masthead .site-heading .subheading {
     }
 }
 
-header.masthead .post-heading h1 {
+header.masthead .article-heading h1 {
     font-size: 35px;
 }
 
-header.masthead .post-heading .meta,
-header.masthead .post-heading .subheading {
+header.masthead .article-heading .meta,
+header.masthead .article-heading .subheading {
     line-height: 1.1;
 }
 
-header.masthead .post-heading .subheading {
+header.masthead .article-heading .subheading {
     font-size: 24px;
     font-weight: 600;
     margin: 10px 0 30px;
 }
 
-header.masthead .post-heading .meta {
+header.masthead .article-heading .meta {
     font-size: 20px;
     font-weight: 300;
     font-style: italic;
 }
 
-header.masthead .post-heading .meta a {
+header.masthead .article-heading .meta a {
     font-weight: 800;
     color: khaki;
 }
 
 @media only screen and (min-width: 768px) {
-    header.masthead .post-heading h1 {
+    header.masthead .article-heading h1 {
         font-size: 55px;
     }
 
-    header.masthead .post-heading .subheading {
+    header.masthead .article-heading .subheading {
         font-size: 30px;
     }
 }

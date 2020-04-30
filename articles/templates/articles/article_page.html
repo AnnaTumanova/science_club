@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}template-postpage{% endblock %}
+{% block body_class %}template-articlepage{% endblock %}
 
 {% block content %}
     <header class="masthead masthead--background"
-            style="background-image: url({% static 'assets/img/blog-bg-compressor.jpg' %})">
+            style="background-image: url({% static 'assets/img/articles-bg-compressor.jpg' %})">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto text-center">
-                    <div class="post-heading">
+                    <div class="article-heading">
                         <h1>{{ page.title }}</h1>
                         <div class="divider-custom divider-light">
                             <div class="divider-custom-line"></div>
@@ -40,6 +40,6 @@
     </article>
 
     <div class="text-center mt-5 mb-5 lead font-weight-bold">
-        <p><a href="{{ page.get_parent.url }}">Return to blog &rarr;</a></p>
+        <p><a href="{{ page.get_parent.url }}">Return to Articles Index &rarr;</a></p>
     </div>
 {% endblock %}

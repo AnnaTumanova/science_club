@@ -1,0 +1,41 @@
+.article-preview > a {
+    color: #212529;
+}
+
+.article-preview > a:focus, .article-preview > a:hover {
+    text-decoration: none;
+    color: #0085A1;
+}
+
+.article-preview > a > .article-title {
+    font-size: 30px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.article-preview > a > .article-subtitle {
+    font-weight: 300;
+    margin: 0 0 10px;
+}
+
+.article-preview > .article-meta {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 0;
+    color: #868e96;
+}
+
+.article-preview > .article-meta > a {
+    text-decoration: none;
+    color: #212529;
+}
+
+.article-preview > .article-meta > a:focus, .article-preview > .article-meta > a:hover {
+    text-decoration: underline;
+    color: #0085A1;
+}
+@media only screen and (min-width: 768px) {
+    .article-preview > a > .article-title {
+        font-size: 36px;
+    }
+}

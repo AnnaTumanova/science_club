@@ -180,3 +180,11 @@ ul.errorlist {
 .errorfield {
     border-color: red;
 }
+
+#mainNav .navbar-brand.navbar-user {
+    font-size: 1.25em;
+}
+
+.user-color {
+    color: khaki;
+}

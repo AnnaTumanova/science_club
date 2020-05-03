@@ -15,7 +15,7 @@
         </div>
     </header>
 
-    <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Browse threads</h2>
+    <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">{{ page.thread.subject }}</h2>
     <!-- Icon Divider-->
     <div class="divider-custom">
         <div class="divider-custom-line"></div>
@@ -23,18 +23,16 @@
         <div class="divider-custom-line"></div>
     </div>
 
-    <div class="mb-5">
-        {% for thread in page.threads %}
-            <div class="text-center mx-auto lead">
-                <a href="{% slugurl 'threads' %}{{ thread.id }}">{{ thread.subject }}</a>
-                by {{ thread.author.first_name }} {{ thread.author.last_name }}
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto lead">
+                {{ page.thread.content }}
             </div>
-        {% endfor %}
+        </div>
     </div>
 
-
     {% if user.is_authenticated %}
-        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Create new thread</h2>
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Respond</h2>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -45,7 +43,7 @@
         <div class="container mb-5">
             <div class="row">
                 <div class="col-lg-8 mx-auto lead">
-                    <form action="{{ page.url }}" method="POST">
+                    <form action="{{ page.url }}{{ page.thread.id }}/" method="POST">
                         {% csrf_token %}
 
                         {{ page.form.non_field_errors }}
@@ -63,5 +61,9 @@
             </div>
         </div>
     {% endif %}
+
+    <div class="text-center mt-5 mb-5 lead font-weight-bold">
+        <p><a href="{{ page.get_parent.url }}">Return to Threads List &rarr;</a></p>
+    </div>
 {% endblock %}
 

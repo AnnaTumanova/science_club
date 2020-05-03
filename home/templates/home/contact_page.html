@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}template-contactpage{% endblock %}
-
 {% block content %}
     <header class="masthead masthead--background"
             style="background-image: url({% static 'assets/img/contact-bg-compressor.jpg' %})">
@@ -25,12 +23,10 @@
                     {{ page.form.non_field_errors }}
 
                     {% for field in page.form %}
-                        {% if field.name != 'is_active' %}
-                            <div class="form-group">
-                                {{ field.label_tag }} {{ field }}
-                                {{ field.errors }}
-                            </div>
-                        {% endif %}
+                        <div class="form-group">
+                            {{ field.label_tag }} {{ field }}
+                            {{ field.errors }}
+                        </div>
                     {% endfor %}
 
                     <button type="submit" class="btn btn-primary btn--lead mt-2">Submit</button>

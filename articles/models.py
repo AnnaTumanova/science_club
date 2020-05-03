@@ -15,7 +15,7 @@ class ArticlePage(Page):
     parent_page_types = ['ArticleIndexPage']
     subpage_types = []
 
-    date = models.DateField("Post date")
+    date = models.DateField("Date added")
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
 

@@ -17,7 +17,7 @@ from .signup import account_activation_token
 
 class HomePage(Page):
     parent_page_types = ['wagtailcore.Page']
-    subpage_types = ['SignUpPage', 'ContactPage', 'articles.ArticleIndexPage']
+    subpage_types = ['SignUpPage', 'ContactPage', 'articles.ArticleIndexPage', 'forum.ForumPage']
     slug = 'home'
 
 

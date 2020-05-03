@@ -159,6 +159,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'ml/static'),
     os.path.join(BASE_DIR, 'home/static'),
     os.path.join(BASE_DIR, 'articles/static'),
+    os.path.join(BASE_DIR, 'forum/static'),
 )
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated

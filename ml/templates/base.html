@@ -1,4 +1,4 @@
-{% load static wagtailuserbar wagtailcore_tags %}
+{% load static wagtailcore_tags %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -36,7 +36,6 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %}" id="page-top">
-{% wagtailuserbar %}
 
 {# Navigation #}
 <div class="fixed-top">
@@ -62,6 +61,15 @@
                     class="fas fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded
+                            {% if 'home' == page.slug %}chosen-link{% endif %}"
+                               href="{% slugurl 'home' %}">
+                                Home
+                            </a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item mx-0 mx-lg-1">
                         <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger
                             {% if 'contact' == page.slug %}chosen-link{% endif %}"
@@ -78,11 +86,21 @@
                     </li>
                     <li class="nav-item mx-0 mx-lg-1">
                         <a class="nav-link py-3 px-0 px-lg-3 rounded
-                            {% if 'signup' == page.slug %}chosen-link{% endif %}"
-                           href="{% slugurl 'signup' %}">
-                            Sign up
+                            {% if 'forum' == page.slug %}chosen-link{% endif %}"
+                           href="{% slugurl 'forum' %}">
+                            Forum
                         </a>
                     </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded
+                            {% if 'signup' == page.slug %}chosen-link{% endif %}"
+                               href="{% slugurl 'signup' %}">
+                                Sign up
+                            </a>
+                        </li>
+                    {% endif %}
+
                     <li class="nav-item mx-0 mx-lg-1">
                         {% if user.is_authenticated %}
                             <a class="nav-link py-3 px-0 px-lg-3 rounded"
